@@ -103,6 +103,7 @@ const config = defineMain({
     '@storybook/addon-themes',
     '@storybook/addon-docs',
     '@storybook/addon-designs',
+    '@storybook/addon-web-performance',
     '@storybook/addon-vitest',
     '@storybook/addon-a11y',
     'storybook-addon-pseudo-states',

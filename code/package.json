@@ -115,6 +115,7 @@
     "@storybook/addon-onboarding": "workspace:*",
     "@storybook/addon-themes": "workspace:*",
     "@storybook/addon-vitest": "workspace:*",
+    "@storybook/addon-web-performance": "workspace:*",
     "@storybook/angular": "workspace:*",
     "@storybook/bench": "next",
     "@storybook/builder-vite": "workspace:*",

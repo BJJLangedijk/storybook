@@ -8,6 +8,11 @@ export {
   ADDON_ID as A11Y_ADDON_ID,
 } from '../../../addons/a11y/src/constants';
 
+export {
+  PANEL_ID as WEB_PERFORMANCE_PANEL_ID,
+  ADDON_ID as WEB_PERFORMANCE_ADDON_ID,
+} from '../../../addons/web-performance/src/constants';
+
 export const ADDON_ID = 'storybook/test';
 export const TEST_PROVIDER_ID = `${ADDON_ID}/test-provider`;
 export const STORYBOOK_ADDON_TEST_CHANNEL = 'STORYBOOK_ADDON_TEST_CHANNEL';
@@ -36,6 +41,7 @@ export const storeOptions = {
     config: {
       coverage: false,
       a11y: false,
+      webPerformance: false,
     },
     watching: false,
     cancelling: false,
@@ -47,12 +53,18 @@ export const storeOptions = {
       config: {
         coverage: false,
         a11y: false,
+        webPerformance: false,
       },
       componentTestCount: {
         success: 0,
         error: 0,
       },
       a11yCount: {
+        success: 0,
+        warning: 0,
+        error: 0,
+      },
+      webPerformanceCount: {
         success: 0,
         warning: 0,
         error: 0,
@@ -75,3 +87,4 @@ export const TEST_PROVIDER_STORE_CHANNEL_EVENT_NAME = 'UNIVERSAL_STORE:storybook
 
 export const STATUS_TYPE_ID_COMPONENT_TEST = 'storybook/component-test';
 export const STATUS_TYPE_ID_A11Y = 'storybook/a11y';
+export const STATUS_TYPE_ID_WEB_PERFORMANCE = 'storybook/web-performance';

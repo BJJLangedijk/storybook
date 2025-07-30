@@ -8,6 +8,7 @@ export default {
   'storybook-addon-pseudo-states': '9.1.0-alpha.9',
   '@storybook/addon-themes': '9.1.0-alpha.9',
   '@storybook/addon-vitest': '9.1.0-alpha.9',
+  '@storybook/addon-web-performance': '9.1.0-alpha.9',
   '@storybook/builder-vite': '9.1.0-alpha.9',
   '@storybook/builder-webpack5': '9.1.0-alpha.9',
   storybook: '9.1.0-alpha.9',

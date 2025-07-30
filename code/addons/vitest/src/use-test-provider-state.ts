@@ -17,7 +17,12 @@ import {
   experimental_useUniversalStore,
 } from 'storybook/manager-api';
 
-import { ADDON_ID, STATUS_TYPE_ID_A11Y, STATUS_TYPE_ID_COMPONENT_TEST } from './constants';
+import {
+  ADDON_ID,
+  STATUS_TYPE_ID_A11Y,
+  STATUS_TYPE_ID_COMPONENT_TEST,
+  STATUS_TYPE_ID_WEB_PERFORMANCE,
+} from './constants';
 import type { StoreState } from './types';
 
 export type StatusValueToStoryIds = Record<StatusValue, StoryId[]>;
@@ -58,6 +63,7 @@ export const useTestProvider = (
   testProviderState: TestProviderState;
   componentTestStatusValueToStoryIds: StatusValueToStoryIds;
   a11yStatusValueToStoryIds: StatusValueToStoryIds;
+  webPerformanceStatusValueToStoryIds: StatusValueToStoryIds;
   isSettingsUpdated: boolean;
 } => {
   const testProviderState = experimental_useTestProviderStore((s) => s[ADDON_ID]);
@@ -102,7 +108,15 @@ export const useTestProvider = (
       statusValueToStoryIds(allStatuses, STATUS_TYPE_ID_A11Y, storyIds),
     [storyIds]
   );
+  const webPerformanceStatusValueToStoryIdsSelector = useCallback(
+    (allStatuses: StatusesByStoryIdAndTypeId) =>
+      statusValueToStoryIds(allStatuses, STATUS_TYPE_ID_WEB_PERFORMANCE, storyIds),
+    [storyIds]
+  );
   const a11yStatusValueToStoryIds = experimental_useStatusStore(a11yStatusValueToStoryIdsSelector);
+  const webPerformanceStatusValueToStoryIds = experimental_useStatusStore(
+    webPerformanceStatusValueToStoryIdsSelector
+  );
 
   return {
     storeState,
@@ -110,6 +124,7 @@ export const useTestProvider = (
     testProviderState,
     componentTestStatusValueToStoryIds,
     a11yStatusValueToStoryIds,
+    webPerformanceStatusValueToStoryIds,
     isSettingsUpdated,
   };
 };

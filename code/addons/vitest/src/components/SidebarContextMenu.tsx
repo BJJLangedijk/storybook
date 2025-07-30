@@ -17,6 +17,7 @@ export const SidebarContextMenu: FC<SidebarContextMenuProps> = ({ context, api }
     testProviderState,
     componentTestStatusValueToStoryIds,
     a11yStatusValueToStoryIds,
+    webPerformanceStatusValueToStoryIds,
     storeState,
     setStoreState,
   } = useTestProvider(api, context.id);
@@ -29,6 +30,7 @@ export const SidebarContextMenu: FC<SidebarContextMenuProps> = ({ context, api }
       testProviderState={testProviderState}
       componentTestStatusValueToStoryIds={componentTestStatusValueToStoryIds}
       a11yStatusValueToStoryIds={a11yStatusValueToStoryIds}
+      webPerformanceStatusValueToStoryIds={webPerformanceStatusValueToStoryIds}
       storeState={storeState}
       setStoreState={setStoreState}
       isSettingsUpdated={false}

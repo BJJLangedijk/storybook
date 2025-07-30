@@ -7,13 +7,20 @@ import {
   componentTestStatusStore,
   store,
   testProviderStore,
+  webPerformanceStatusStore,
 } from '#manager-store';
 import { addons } from 'storybook/manager-api';
 
 import { GlobalErrorContext, GlobalErrorModal } from './components/GlobalErrorModal';
 import { SidebarContextMenu } from './components/SidebarContextMenu';
 import { TestProviderRender } from './components/TestProviderRender';
-import { A11Y_PANEL_ID, ADDON_ID, COMPONENT_TESTING_PANEL_ID, TEST_PROVIDER_ID } from './constants';
+import {
+  A11Y_PANEL_ID,
+  ADDON_ID,
+  COMPONENT_TESTING_PANEL_ID,
+  TEST_PROVIDER_ID,
+  WEB_PERFORMANCE_PANEL_ID,
+} from './constants';
 import { useTestProvider } from './use-test-provider-state';
 
 addons.register(ADDON_ID, (api) => {
@@ -28,6 +35,9 @@ addons.register(ADDON_ID, (api) => {
     });
     a11yStatusStore.onSelect(() => {
       openPanel(A11Y_PANEL_ID);
+    });
+    webPerformanceStatusStore.onSelect(() => {
+      openPanel(WEB_PERFORMANCE_PANEL_ID);
     });
     testProviderStore.onRunAll(() => {
       store.send({
@@ -54,6 +64,7 @@ addons.register(ADDON_ID, (api) => {
           testProviderState,
           componentTestStatusValueToStoryIds,
           a11yStatusValueToStoryIds,
+          webPerformanceStatusValueToStoryIds,
           isSettingsUpdated,
         } = useTestProvider(api);
         return (
@@ -66,6 +77,7 @@ addons.register(ADDON_ID, (api) => {
               testProviderState={testProviderState}
               componentTestStatusValueToStoryIds={componentTestStatusValueToStoryIds}
               a11yStatusValueToStoryIds={a11yStatusValueToStoryIds}
+              webPerformanceStatusValueToStoryIds={webPerformanceStatusValueToStoryIds}
             />
             <GlobalErrorModal
               storeState={storeState}

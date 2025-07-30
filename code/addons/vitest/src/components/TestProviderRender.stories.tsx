@@ -52,6 +52,13 @@ const meta = {
       'status-value:warning': [],
       'status-value:unknown': [],
     },
+    webPerformanceStatusValueToStoryIds: {
+      'status-value:error': [],
+      'status-value:success': [],
+      'status-value:pending': [],
+      'status-value:warning': [],
+      'status-value:unknown': [],
+    },
     storeState: storeOptions.initialState,
     setStoreState: fn(),
     isSettingsUpdated: false,
@@ -117,6 +124,7 @@ export const TestingWithStatuses: Story = {
       config: {
         coverage: true,
         a11y: true,
+        webPerformance: true,
       },
       currentRun: {
         ...storeOptions.initialState.currentRun,
@@ -133,6 +141,10 @@ export const TestingWithStatuses: Story = {
     },
     a11yStatusValueToStoryIds: {
       ...meta.args.a11yStatusValueToStoryIds,
+      'status-value:warning': ['story-id-3', 'story-id-4', 'story-id-5'],
+    },
+    webPerformanceStatusValueToStoryIds: {
+      ...meta.args.webPerformanceStatusValueToStoryIds,
       'status-value:warning': ['story-id-3', 'story-id-4', 'story-id-5'],
     },
   },
@@ -290,6 +302,38 @@ export const AccessibilityViolationsWithErrors: Story = {
     testProviderState: 'test-provider-state:succeeded',
     a11yStatusValueToStoryIds: {
       ...meta.args.a11yStatusValueToStoryIds,
+      'status-value:warning': ['story-id-1', 'story-id-2', 'story-id-5'],
+      'status-value:error': ['story-id-3', 'story-id-4'],
+    },
+  },
+};
+
+export const WebPerformanceEnabled: Story = {
+  args: {
+    storeState: {
+      ...meta.args.storeState,
+      config: { ...meta.args.storeState.config, webPerformance: true },
+    },
+  },
+};
+
+export const WebPerformanceViolations: Story = {
+  args: {
+    ...WebPerformanceEnabled.args,
+    testProviderState: 'test-provider-state:succeeded',
+    webPerformanceStatusValueToStoryIds: {
+      ...meta.args.webPerformanceStatusValueToStoryIds,
+      'status-value:warning': ['story-id-1', 'story-id-2', 'story-id-3'],
+    },
+  },
+};
+
+export const WebPerformanceWithErrors: Story = {
+  args: {
+    ...WebPerformanceEnabled.args,
+    testProviderState: 'test-provider-state:succeeded',
+    webPerformanceStatusValueToStoryIds: {
+      ...meta.args.webPerformanceStatusValueToStoryIds,
       'status-value:warning': ['story-id-1', 'story-id-2', 'story-id-5'],
       'status-value:error': ['story-id-3', 'story-id-4'],
     },

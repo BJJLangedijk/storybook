@@ -11,6 +11,7 @@ import {
   ADDON_ID,
   STATUS_TYPE_ID_A11Y,
   STATUS_TYPE_ID_COMPONENT_TEST,
+  STATUS_TYPE_ID_WEB_PERFORMANCE,
   storeOptions,
 } from './constants';
 
@@ -27,6 +28,15 @@ export const componentTestStatusStore: StatusStoreByTypeId = {
 
 export const a11yStatusStore: StatusStoreByTypeId = {
   typeId: STATUS_TYPE_ID_A11Y,
+  getAll: testUtils.fn(() => ({})),
+  set: testUtils.fn(),
+  onAllStatusChange: testUtils.fn(() => () => {}),
+  onSelect: testUtils.fn(() => () => {}),
+  unset: testUtils.fn(),
+};
+
+export const webPerformanceStatusStore: StatusStoreByTypeId = {
+  typeId: STATUS_TYPE_ID_WEB_PERFORMANCE,
   getAll: testUtils.fn(() => ({})),
   set: testUtils.fn(),
   onAllStatusChange: testUtils.fn(() => () => {}),

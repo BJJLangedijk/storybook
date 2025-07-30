@@ -7,6 +7,7 @@ import {
   ADDON_ID,
   STATUS_TYPE_ID_A11Y,
   STATUS_TYPE_ID_COMPONENT_TEST,
+  STATUS_TYPE_ID_WEB_PERFORMANCE,
   storeOptions,
 } from '../constants';
 import type { ErrorLike, FatalErrorEvent, StoreEvent, StoreState } from '../types';
@@ -45,6 +46,7 @@ new TestManager({
   store,
   componentTestStatusStore: getStatusStore(STATUS_TYPE_ID_COMPONENT_TEST),
   a11yStatusStore: getStatusStore(STATUS_TYPE_ID_A11Y),
+  webPerformanceStatusStore: getStatusStore(STATUS_TYPE_ID_WEB_PERFORMANCE),
   testProviderStore: getTestProviderStore(ADDON_ID),
   onReady: () => {
     process.send?.({ type: 'ready' });

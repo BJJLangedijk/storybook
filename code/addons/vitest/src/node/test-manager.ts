@@ -11,7 +11,12 @@ import type {
 import { throttle } from 'es-toolkit';
 import type { Report } from 'storybook/preview-api';
 
-import { STATUS_TYPE_ID_A11Y, STATUS_TYPE_ID_COMPONENT_TEST, storeOptions } from '../constants';
+import {
+  STATUS_TYPE_ID_A11Y,
+  STATUS_TYPE_ID_COMPONENT_TEST,
+  STATUS_TYPE_ID_WEB_PERFORMANCE,
+  storeOptions,
+} from '../constants';
 import type { RunTrigger, StoreEvent, StoreState, TriggerRunEvent, VitestError } from '../types';
 import { errorToErrorLike } from '../utils';
 import { VitestManager } from './vitest-manager';
@@ -21,6 +26,7 @@ export type TestManagerOptions = {
   store: experimental_UniversalStore<StoreState, StoreEvent>;
   componentTestStatusStore: StatusStoreByTypeId;
   a11yStatusStore: StatusStoreByTypeId;
+  webPerformanceStatusStore: StatusStoreByTypeId;
   testProviderStore: TestProviderStoreById;
   onError?: (message: string, error: Error) => void;
   onReady?: () => void;
@@ -42,6 +48,7 @@ export class TestManager {
   private componentTestStatusStore: TestManagerOptions['componentTestStatusStore'];
 
   private a11yStatusStore: TestManagerOptions['a11yStatusStore'];
+  private webPerformanceStatusStore: TestManagerOptions['webPerformanceStatusStore'];
 
   private testProviderStore: TestManagerOptions['testProviderStore'];
 
@@ -59,6 +66,7 @@ export class TestManager {
     this.store = options.store;
     this.componentTestStatusStore = options.componentTestStatusStore;
     this.a11yStatusStore = options.a11yStatusStore;
+    this.webPerformanceStatusStore = options.webPerformanceStatusStore;
     this.testProviderStore = options.testProviderStore;
     this.onReady = options.onReady;
     this.storybookOptions = options.storybookOptions;
@@ -123,6 +131,7 @@ export class TestManager {
   }) {
     this.componentTestStatusStore.unset(storyIds);
     this.a11yStatusStore.unset(storyIds);
+    this.webPerformanceStatusStore.unset(storyIds);
 
     this.store.setState((s) => ({
       ...s,
@@ -191,6 +200,11 @@ export class TestManager {
     this.store.setState((s) => {
       let { success: ctSuccess, error: ctError } = s.currentRun.componentTestCount;
       let { success: a11ySuccess, warning: a11yWarning, error: a11yError } = s.currentRun.a11yCount;
+      let {
+        success: webPerformanceSuccess,
+        warning: webPerformanceWarning,
+        error: webPerformanceError,
+      } = s.currentRun.webPerformanceCount;
       testCaseResultsToFlush.forEach(({ testResult, reports }) => {
         if (testResult.state === 'passed') {
           ctSuccess++;
@@ -208,6 +222,18 @@ export class TestManager {
               a11yError++;
             }
           });
+
+        reports
+          ?.filter((r) => r.type === 'web-performance')
+          .forEach((report) => {
+            if (report.status === 'passed') {
+              webPerformanceSuccess++;
+            } else if (report.status === 'warning') {
+              webPerformanceWarning++;
+            } else if (report.status === 'failed') {
+              webPerformanceError++;
+            }
+          });
       });
       const finishedTestCount = ctSuccess + ctError;
 
@@ -217,6 +243,11 @@ export class TestManager {
           ...s.currentRun,
           componentTestCount: { success: ctSuccess, error: ctError },
           a11yCount: { success: a11ySuccess, warning: a11yWarning, error: a11yError },
+          webPerformanceCount: {
+            success: webPerformanceSuccess,
+            warning: webPerformanceWarning,
+            error: webPerformanceError,
+          },
           // in some cases successes and errors can exceed the anticipated totalTestCount
           // e.g. when testing more tests than the stories we know about upfront
           // in those cases, we set the totalTestCount to the sum of successes and errors
@@ -256,6 +287,25 @@ export class TestManager {
 
     if (a11yStatuses.length > 0) {
       this.a11yStatusStore.set(a11yStatuses);
+    }
+
+    const webPerformanceStatuses = testCaseResultsToFlush
+      .flatMap(({ storyId, reports }) =>
+        reports
+          ?.filter((r) => r.type === 'web-performance')
+          .map((webPerformanceReport) => ({
+            storyId,
+            typeId: STATUS_TYPE_ID_WEB_PERFORMANCE,
+            value: testStateToStatusValueMap[webPerformanceReport.status],
+            title: 'Accessibility tests',
+            description: '',
+            sidebarContextMenu: false,
+          }))
+      )
+      .filter((webPerformanceStatus) => webPerformanceStatus !== undefined);
+
+    if (webPerformanceStatuses.length > 0) {
+      this.webPerformanceStatusStore.set(webPerformanceStatuses);
     }
   }, 500);
 

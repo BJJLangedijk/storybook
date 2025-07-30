@@ -12,7 +12,12 @@ import type {
 
 import path from 'pathe';
 
-import { STATUS_TYPE_ID_A11Y, STATUS_TYPE_ID_COMPONENT_TEST, storeOptions } from '../constants';
+import {
+  STATUS_TYPE_ID_A11Y,
+  STATUS_TYPE_ID_COMPONENT_TEST,
+  STATUS_TYPE_ID_WEB_PERFORMANCE,
+  storeOptions,
+} from '../constants';
 import type { StoreEvent, StoreState } from '../types';
 import { TestManager, type TestManagerOptions } from './test-manager';
 
@@ -192,7 +197,10 @@ describe('TestManager', () => {
     expect(createVitest).toHaveBeenCalledTimes(1);
     createVitest.mockClear();
 
-    mockStore.setState((s) => ({ ...s, config: { coverage: true, a11y: false } }));
+    mockStore.setState((s) => ({
+      ...s,
+      config: { coverage: true, a11y: false, webPerformance: false },
+    }));
 
     await testManager.handleTriggerRunEvent({
       type: 'TRIGGER_RUN',
@@ -215,7 +223,10 @@ describe('TestManager', () => {
     expect(createVitest).toHaveBeenCalledTimes(1);
     createVitest.mockClear();
 
-    mockStore.setState((s) => ({ ...s, config: { coverage: true, a11y: false } }));
+    mockStore.setState((s) => ({
+      ...s,
+      config: { coverage: true, a11y: false, webPerformance: false },
+    }));
 
     await testManager.handleTriggerRunEvent({
       type: 'TRIGGER_RUN',

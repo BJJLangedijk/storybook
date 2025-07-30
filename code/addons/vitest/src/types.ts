@@ -26,6 +26,7 @@ export type StoreState = {
   config: {
     coverage: boolean;
     a11y: boolean;
+    webPerformance: boolean;
   };
   watching: boolean;
   cancelling: boolean;
@@ -47,6 +48,11 @@ export type StoreState = {
       error: number;
     };
     a11yCount: {
+      success: number;
+      warning: number;
+      error: number;
+    };
+    webPerformanceCount: {
       success: number;
       warning: number;
       error: number;

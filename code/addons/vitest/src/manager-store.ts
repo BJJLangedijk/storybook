@@ -8,6 +8,7 @@ import {
   ADDON_ID,
   STATUS_TYPE_ID_A11Y,
   STATUS_TYPE_ID_COMPONENT_TEST,
+  STATUS_TYPE_ID_WEB_PERFORMANCE,
   storeOptions,
 } from './constants';
 import type { StoreEvent, StoreState } from './types';
@@ -19,4 +20,7 @@ export const store = experimental_UniversalStore.create<StoreState, StoreEvent>(
 
 export const componentTestStatusStore = experimental_getStatusStore(STATUS_TYPE_ID_COMPONENT_TEST);
 export const a11yStatusStore = experimental_getStatusStore(STATUS_TYPE_ID_A11Y);
+export const webPerformanceStatusStore = experimental_getStatusStore(
+  STATUS_TYPE_ID_WEB_PERFORMANCE
+);
 export const testProviderStore = experimental_getTestProviderStore(ADDON_ID);

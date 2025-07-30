@@ -22,6 +22,8 @@ import {
   A11Y_PANEL_ID,
   COMPONENT_TESTING_PANEL_ID,
   FULL_RUN_TRIGGERS,
+  WEB_PERFORMANCE_ADDON_ID,
+  WEB_PERFORMANCE_PANEL_ID,
 } from '../constants';
 import type { StoreState } from '../types';
 import type { StatusValueToStoryIds } from '../use-test-provider-state';
@@ -93,6 +95,7 @@ type TestProviderRenderProps = {
   testProviderState: TestProviderState;
   componentTestStatusValueToStoryIds: StatusValueToStoryIds;
   a11yStatusValueToStoryIds: StatusValueToStoryIds;
+  webPerformanceStatusValueToStoryIds: StatusValueToStoryIds;
   storeState: StoreState;
   setStoreState: (typeof store)['setState'];
   isSettingsUpdated: boolean;
@@ -107,6 +110,7 @@ export const TestProviderRender: FC<TestProviderRenderProps> = ({
   setStoreState,
   componentTestStatusValueToStoryIds,
   a11yStatusValueToStoryIds,
+  webPerformanceStatusValueToStoryIds,
   isSettingsUpdated,
   ...props
 }) => {
@@ -115,6 +119,9 @@ export const TestProviderRender: FC<TestProviderRenderProps> = ({
     currentRun.componentTestCount.success + currentRun.componentTestCount.error;
 
   const hasA11yAddon = addons.experimental_getRegisteredAddons().includes(A11Y_ADDON_ID);
+  const hasWebPerformanceAddon = addons
+    .experimental_getRegisteredAddons()
+    .includes(WEB_PERFORMANCE_ADDON_ID);
 
   const isRunning = testProviderState === 'test-provider-state:running';
   const isStarting = isRunning && finishedTestCount === 0;
@@ -146,6 +153,21 @@ export const TestProviderRender: FC<TestProviderRenderProps> = ({
           : a11yStatusValueToStoryIds['status-value:success'].length > 0
             ? ['positive', 'Accessibility tests passed']
             : ['unknown', 'Run tests to see accessibility results'];
+
+  const [webPerformanceStatusIcon, webPerformanceStatusLabel]: [
+    ComponentProps<typeof TestStatusIcon>['status'],
+    string,
+  ] = fatalError
+    ? ['critical', 'Component tests crashed']
+    : webPerformanceStatusValueToStoryIds['status-value:error'].length > 0
+      ? ['negative', 'Web Performance tests failed']
+      : webPerformanceStatusValueToStoryIds['status-value:warning'].length > 0
+        ? ['warning', 'Web Performance tests failed']
+        : isRunning
+          ? ['unknown', 'Testing in progress']
+          : webPerformanceStatusValueToStoryIds['status-value:success'].length > 0
+            ? ['positive', 'Web Performance tests passed']
+            : ['unknown', 'Run tests to see Web Performance results'];
 
   return (
     <Container {...props}>
@@ -430,6 +452,62 @@ export const TestProviderRender: FC<TestProviderRenderProps> = ({
                 />
                 {a11yStatusValueToStoryIds['status-value:error'].length +
                   a11yStatusValueToStoryIds['status-value:warning'].length || null}
+              </IconButton>
+            </WithTooltip>
+          </Row>
+        )}
+
+        {hasWebPerformanceAddon && (
+          <Row>
+            <ListItem
+              as="label"
+              title="Web Performance"
+              icon={
+                entry ? null : (
+                  <Form.Checkbox
+                    checked={config.webPerformance}
+                    disabled={isRunning}
+                    onChange={() =>
+                      setStoreState((s) => ({
+                        ...s,
+                        config: { ...s.config, webPerformance: !config.webPerformance },
+                      }))
+                    }
+                  />
+                )
+              }
+            />
+            <WithTooltip
+              hasChrome={false}
+              trigger="hover"
+              tooltip={<TooltipNote note={webPerformanceStatusLabel} />}
+            >
+              <IconButton
+                size="medium"
+                disabled={
+                  webPerformanceStatusValueToStoryIds['status-value:error'].length === 0 &&
+                  webPerformanceStatusValueToStoryIds['status-value:warning'].length === 0 &&
+                  webPerformanceStatusValueToStoryIds['status-value:success'].length === 0
+                }
+                onClick={() => {
+                  openPanel({
+                    api,
+                    entryId:
+                      webPerformanceStatusValueToStoryIds['status-value:error'][0] ??
+                      webPerformanceStatusValueToStoryIds['status-value:warning'][0] ??
+                      webPerformanceStatusValueToStoryIds['status-value:success'][0] ??
+                      entry?.id,
+                    panelId: WEB_PERFORMANCE_PANEL_ID,
+                  });
+                }}
+              >
+                <TestStatusIcon
+                  status={webPerformanceStatusIcon}
+                  aria-label={webPerformanceStatusLabel}
+                  isRunning={isRunning}
+                />
+                {webPerformanceStatusValueToStoryIds['status-value:error'].length +
+                  webPerformanceStatusValueToStoryIds['status-value:warning'].length || null}
               </IconButton>
             </WithTooltip>
           </Row>
