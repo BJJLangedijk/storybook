@@ -6,9 +6,9 @@ import { SyncIcon } from '@storybook/icons';
 
 import { styled } from 'storybook/theming';
 
-import { useWebPerformanceContext } from './WebPerformanceContext';
 import { Report } from './Report/Report';
 import { TestDiscrepancyMessage } from './TestDiscrepancyMessage';
+import { useWebPerformanceContext } from './WebPerformanceContext';
 
 const RotatingIcon = styled(SyncIcon)(({ theme }) => ({
   animation: `${theme.animation.rotate360} 1s linear infinite;`,
@@ -65,7 +65,11 @@ export const WebPerformancePanel: React.FC = () => {
           <strong>Web performance tests are disabled for this story</strong>
           <p>
             Update{' '}
-            <code>{parameters.disable ? 'parameters.webPerformance.disable' : 'parameters.webPerformance.test'}</code>{' '}
+            <code>
+              {parameters.disable
+                ? 'parameters.webPerformance.disable'
+                : 'parameters.webPerformance.test'}
+            </code>{' '}
             to enable web performance tests tests.
           </p>
         </div>
@@ -78,12 +82,12 @@ export const WebPerformancePanel: React.FC = () => {
       {discrepancy && <TestDiscrepancyMessage discrepancy={discrepancy} />}
       {status === 'ready' || status === 'ran' ? (
         <Report
-        items={results}
-        empty="No web performance analysis found."
-        handleSelectionChange={handleSelectionChange}
-        selectedItems={selectedItems}
-        toggleOpen={toggleOpen}
-      />
+          items={results}
+          empty="No web performance analysis found."
+          handleSelectionChange={handleSelectionChange}
+          selectedItems={selectedItems}
+          toggleOpen={toggleOpen}
+        />
       ) : (
         <Centered style={{ marginTop: discrepancy ? '1em' : 0 }}>
           {status === 'initial' && (
@@ -98,12 +102,12 @@ export const WebPerformancePanel: React.FC = () => {
               <div>
                 <strong>Web performance tests run manually for this story</strong>
                 <p>
-                  Results will not show when using the testing module. You can still run
-                  accessibility tests manually.
+                  Results will not show when using the testing module. You can still run web
+                  performance tests manually.
                 </p>
               </div>
               <Button size="medium" onClick={handleManual}>
-                Run web performance
+                Run web performance scan
               </Button>
               <p>
                 Update <code>globals.webPerformance.manual</code> to disable manual mode.
@@ -113,14 +117,14 @@ export const WebPerformancePanel: React.FC = () => {
           {status === 'running' && (
             <div>
               <RotatingIcon size={12} />
-              <strong>Web performance in progress</strong>
-              <p>Please wait while the web performance is running...</p>
+              <strong>Web performance scan in progress</strong>
+              <p>Please wait while the web performance scan is running...</p>
             </div>
           )}
           {status === 'error' && (
             <>
               <div>
-                <strong>The web performance encountered an error</strong>
+                <strong>The web performance scan encountered an error</strong>
                 <p>
                   {typeof error === 'string'
                     ? error
@@ -130,7 +134,7 @@ export const WebPerformancePanel: React.FC = () => {
                 </p>
               </div>
               <Button size="medium" onClick={handleManual}>
-                Rerun web performance
+                Rerun web performance scan
               </Button>
             </>
           )}
@@ -139,12 +143,12 @@ export const WebPerformancePanel: React.FC = () => {
               <div>
                 <strong>This story&apos;s component tests failed</strong>
                 <p>
-                  Automated web performance will not run until this is resolved. You can still
+                  Automated web performance scan will not run until this is resolved. You can still
                   test manually.
                 </p>
               </div>
               <Button size="medium" onClick={handleManual}>
-                Run web performance
+                Run web performance scan
               </Button>
             </>
           )}

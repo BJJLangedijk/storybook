@@ -13,6 +13,7 @@ import {
 import * as api from 'storybook/manager-api';
 
 import { EVENTS } from '../constants';
+import { results } from '../results.mock';
 import { WebPerformanceContextProvider, useWebPerformanceContext } from './WebPerformanceContext';
 
 vi.mock('storybook/manager-api');
@@ -20,7 +21,7 @@ const mockedApi = vi.mocked(api);
 
 const storyId = 'button--primary';
 
-describe('web-performanceContext', () => {
+describe('WebPerformanceContext', () => {
   afterEach(() => {
     cleanup();
   });
@@ -79,19 +80,7 @@ describe('web-performanceContext', () => {
 
     const Component = () => {
       const { results } = useWebPerformanceContext();
-      return (
-        <>
-          {!!results?.length && (
-            <div data-testid="anyPassesResults">{JSON.stringify(results.passes)}</div>
-          )}
-          {!!results?.length && (
-            <div data-testid="anyIncompleteResults">{JSON.stringify(results.incomplete)}</div>
-          )}
-          {!!results?.length && (
-            <div data-testid="anyViolationsResults">{JSON.stringify(results.violations)}</div>
-          )}
-        </>
-      );
+      return <>{!!results?.length && <div data-testid="results">{JSON.stringify(results)}</div>}</>;
     };
 
     const { queryByTestId } = render(
@@ -100,9 +89,7 @@ describe('web-performanceContext', () => {
       </WebPerformanceContextProvider>
     );
 
-    expect(queryByTestId('anyPassesResults')).toBeFalsy();
-    expect(queryByTestId('anyIncompleteResults')).toBeFalsy();
-    expect(queryByTestId('anyViolationsResults')).toBeFalsy();
+    expect(queryByTestId('results')).toBeFalsy();
 
     const useChannelArgs = mockedApi.useChannel.mock.calls[0][0];
     const storyFinishedPayload: StoryFinishedPayload = {
@@ -111,7 +98,7 @@ describe('web-performanceContext', () => {
       reporters: [
         {
           type: 'web-performance',
-          result: [],
+          result: results,
           status: 'failed',
           version: 1,
         },
@@ -119,13 +106,7 @@ describe('web-performanceContext', () => {
     };
 
     act(() => useChannelArgs[STORY_FINISHED](storyFinishedPayload));
-    expect(queryByTestId('anyPassesResults')).toHaveTextContent(JSON.stringify(axeResult.passes));
-    expect(queryByTestId('anyIncompleteResults')).toHaveTextContent(
-      JSON.stringify(axeResult.incomplete)
-    );
-    expect(queryByTestId('anyViolationsResults')).toHaveTextContent(
-      JSON.stringify(axeResult.violations)
-    );
+    expect(queryByTestId('results')).toHaveTextContent(JSON.stringify(results));
   });
 
   it('should set discrepancy to cliFailedButModeManual when in manual mode (set via globals)', () => {
@@ -167,7 +148,7 @@ describe('web-performanceContext', () => {
       reporters: [
         {
           type: 'web-performance',
-          result: [],
+          result: [{}, {}],
           status: 'failed',
           version: 1,
         },

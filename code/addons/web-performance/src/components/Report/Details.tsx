@@ -138,7 +138,7 @@ interface DetailsProps {
 export const Details = ({ name, item, selection, handleSelectionChange }: DetailsProps) => (
   <Wrapper id={name}>
     <Info>
-      <RuleId>{item.name}</RuleId>
+      <RuleId>{item.type}</RuleId>
       <Description>
         {item.value}
         {item.rating}

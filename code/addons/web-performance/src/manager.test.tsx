@@ -70,15 +70,17 @@ describe('WebPerformanceManager', () => {
   it('should compute title with issues', () => {
     // given
     mockedApi.useAddonState.mockImplementation(() => [
-      {
-        rating: 'poor',
-      },
-      {
-        rating: 'needs_improvement',
-      },
-      {
-        rating: 'needs_improvement',
-      }
+      [
+        {
+          rating: 'poor',
+        },
+        {
+          rating: 'needs_improvement',
+        },
+        {
+          rating: 'needs_improvement',
+        },
+      ],
     ]);
     registrationImpl(mockedApi);
     const title = mockedAddons.add.mock.calls.map(([_, def]) => def).find(isPanel)
@@ -100,7 +102,7 @@ describe('WebPerformanceManager', () => {
         </span>
         <Badge
           compact={true}
-          status="neutral"
+          status="warning"
         >
           3
         </Badge>

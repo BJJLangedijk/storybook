@@ -9,19 +9,6 @@ import { results } from '../results.mock';
 import { WebPerformanceContext, type WebPerformanceContextStore } from './WebPerformanceContext';
 import { WebPerformancePanel } from './WebPerformancePanel';
 
-const emptyResults: EnhancedResults = {
-  passes: [],
-  incomplete: [],
-  violations: [],
-  toolOptions: {},
-  inapplicable: [],
-  testEngine: { name: '', version: '' },
-  testRunner: { name: '' },
-  testEnvironment: { userAgent: '', windowWidth: 0, windowHeight: 0 },
-  url: '',
-  timestamp: '',
-};
-
 const StyledWrapper = styled.div(({ theme }) => ({
   backgroundColor: theme.background.content,
   fontSize: theme.typography.size.s2 - 1,
@@ -56,8 +43,6 @@ const context = {
   handleManual: fn(),
   highlighted: false,
   toggleHighlight: fn(),
-  tab: RuleType.VIOLATION,
-  setTab: fn(),
   setStatus: fn(),
   handleCopyLink: fn(),
   toggleOpen: fn(),
@@ -88,7 +73,7 @@ export const Initializing = meta.story({
   render: () => {
     return (
       <Template
-        results={emptyResults}
+        results={[]}
         status="initial"
         error={null}
         discrepancy={null}
@@ -102,7 +87,7 @@ export const Disabled = meta.story({
   render: () => {
     return (
       <Template
-        results={emptyResults}
+        results={[]}
         status="initial"
         error={null}
         discrepancy={null}
@@ -117,7 +102,7 @@ export const Manual = meta.story({
   render: () => {
     return (
       <Template
-        results={emptyResults}
+        results={[]}
         status="manual"
         error={null}
         discrepancy={null}
@@ -131,7 +116,7 @@ export const ManualWithDiscrepancy = meta.story({
   render: () => {
     return (
       <Template
-        results={emptyResults}
+        results={[]}
         status="manual"
         error={null}
         discrepancy={'cliFailedButModeManual'}
@@ -145,7 +130,7 @@ export const Running = meta.story({
   render: () => {
     return (
       <Template
-        results={emptyResults}
+        results={[]}
         status="running"
         error={null}
         discrepancy={null}
@@ -163,14 +148,7 @@ export const ReadyWithResults = meta.story({
         status="ready"
         error={null}
         discrepancy={null}
-        selectedItems={
-          new Map([
-            [
-              `${RuleType.VIOLATION}.${results.violations[0].id}`,
-              `${RuleType.VIOLATION}.${results.violations[0].id}.1`,
-            ],
-          ])
-        }
+        selectedItems={new Map([[results[0].type, `${results[0].type}.1`]])}
       />
     );
   },
@@ -189,14 +167,7 @@ export const ReadyWithResultsDiscrepancyCLIPassedBrowserFailed = meta.story({
         status="ready"
         error={null}
         discrepancy={'cliPassedBrowserFailed'}
-        selectedItems={
-          new Map([
-            [
-              `${RuleType.VIOLATION}.${results.violations[0].id}`,
-              `${RuleType.VIOLATION}.${results.violations[0].id}.1`,
-            ],
-          ])
-        }
+        selectedItems={new Map([[results[0].type, `${results[0].type}.1`]])}
       />
     );
   },
@@ -206,7 +177,7 @@ export const Error = meta.story({
   render: () => {
     return (
       <Template
-        results={emptyResults}
+        results={[]}
         status="error"
         error={`TypeError: Configured rule { impact: "moderate", disable: true } is invalid. Rules must be an object with at least an id property.`}
         discrepancy={null}
@@ -220,7 +191,7 @@ export const ErrorStateWithObject = meta.story({
   render: () => {
     return (
       <Template
-        results={emptyResults}
+        results={[]}
         status="error"
         error={{ message: 'Test error object message' }}
         discrepancy={null}
@@ -234,7 +205,7 @@ export const Broken = meta.story({
   render: () => {
     return (
       <Template
-        results={emptyResults}
+        results={[]}
         status="component-test-error"
         error={null}
         discrepancy={null}

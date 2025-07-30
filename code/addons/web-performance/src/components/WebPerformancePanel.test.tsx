@@ -7,14 +7,14 @@ import React from 'react';
 import * as managerApi from 'storybook/manager-api';
 import { ThemeProvider, convert, themes } from 'storybook/theming';
 
-import { WebPerformancePanel } from './WebPerformancePanel';
-import { type WebPerformanceContextStore, useWebPerformanceContext } from './WebPerformanceContext';
 import type { Metric } from '../types';
+import { type WebPerformanceContextStore, useWebPerformanceContext } from './WebPerformanceContext';
+import { WebPerformancePanel } from './WebPerformancePanel';
 
 vi.mock('storybook/manager-api');
 const mockedManagerApi = vi.mocked(managerApi);
 
-vi.mock('./web-performanceContext');
+vi.mock('./WebPerformanceContext');
 const mockeduseWebPerformanceContext = vi.mocked(useWebPerformanceContext);
 
 mockedManagerApi.useParameter.mockReturnValue({
@@ -58,7 +58,7 @@ describe('WebPerformancePanel', () => {
       </ThemeProvider>
     );
 
-    const runTestButton = component.getByText('Run accessibility scan');
+    const runTestButton = component.getByText('Run web performance scan');
     expect(runTestButton).toBeInTheDocument();
 
     fireEvent.click(runTestButton);
@@ -81,7 +81,7 @@ describe('WebPerformancePanel', () => {
     );
 
     expect(
-      component.getByText('Please wait while the accessibility scan is running...')
+      component.getByText('Please wait while the web performance scan is running...')
     ).toBeInTheDocument();
   });
 
@@ -100,7 +100,7 @@ describe('WebPerformancePanel', () => {
       </ThemeProvider>
     );
 
-    expect(component.container).toHaveTextContent('The accessibility scan encountered an error');
+    expect(component.container).toHaveTextContent('The web performance scan encountered an error');
     expect(component.container).toHaveTextContent('Test error message');
   });
 
@@ -119,7 +119,7 @@ describe('WebPerformancePanel', () => {
       </ThemeProvider>
     );
 
-    expect(component.container).toHaveTextContent('The accessibility scan encountered an error');
+    expect(component.container).toHaveTextContent('The web performance scan encountered an error');
     expect(component.container).toHaveTextContent(`{ "message": "Test error object message" }`);
   });
 });

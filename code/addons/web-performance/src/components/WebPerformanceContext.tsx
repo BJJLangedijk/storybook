@@ -89,8 +89,8 @@ export const WebPerformanceContextProvider: FC<PropsWithChildren> = (props) => {
   const getInitialStatus = useCallback((manual = false) => (manual ? 'manual' : 'initial'), []);
 
   const manual = useMemo(
-    () => globals?.WebPerformance?.manual ?? false,
-    [globals?.WebPerformance?.manual]
+    () => globals?.webPerformance?.manual ?? false,
+    [globals?.webPerformance?.manual]
   );
 
   const WebPerformanceSelection = useMemo(() => {

@@ -6,7 +6,6 @@ import { styled } from 'storybook/theming';
 
 import preview from '../../../../../.storybook/preview';
 import { results } from '../../results.mock';
-import { RuleType } from '../../types';
 import { Report } from './Report';
 
 const StyledWrapper = styled.div(({ theme }) => ({
@@ -47,7 +46,6 @@ const meta = preview.meta({
   args: {
     items: [],
     empty: 'No issues found',
-    type: RuleType.VIOLATION,
     handleSelectionChange: fn().mockName('handleSelectionChange'),
     selectedItems: new Map(),
     toggleOpen: fn().mockName('toggleOpen'),
@@ -58,36 +56,21 @@ export const Empty = meta.story({});
 
 export const Violations = meta.story({
   args: {
-    items: results.violations,
-    type: RuleType.VIOLATION,
-    selectedItems: new Map([
-      [
-        `${RuleType.VIOLATION}.${results.violations[0].id}`,
-        `${RuleType.VIOLATION}.${results.violations[0].id}.3`,
-      ],
-    ]),
+    items: results,
+    selectedItems: new Map([[results[0].type, `${results[0].type}.3`]]),
   },
 });
 
 export const Incomplete = meta.story({
   args: {
-    items: results.incomplete,
-    type: RuleType.INCOMPLETION,
-    selectedItems: new Map([
-      [
-        `${RuleType.INCOMPLETION}.${results.incomplete[1].id}`,
-        `${RuleType.INCOMPLETION}.${results.incomplete[1].id}.2`,
-      ],
-    ]),
+    items: results,
+    selectedItems: new Map([[results[1].type, `${results[1].type}.2`]]),
   },
 });
 
 export const Passes = meta.story({
   args: {
-    items: results.passes,
-    type: RuleType.PASS,
-    selectedItems: new Map([
-      [`${RuleType.PASS}.${results.passes[2].id}`, `${RuleType.PASS}.${results.passes[2].id}.1`],
-    ]),
+    items: results,
+    selectedItems: new Map([[results[2].type, `${results[2].type}.1`]]),
   },
 });

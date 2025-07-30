@@ -21,17 +21,11 @@ channel.on(
     console.log('Running web performance manually for story:', storyId);
     try {
       await waitForAnimations();
-      console.log('wat');
       const result = await run(input, storyId).catch((error) => {
         console.error('Web performance error:', error);
         throw error;
       });
-      // Axe result contains class instances, which telejson deserializes in a
-      // way that violates:
-      //  Content Security Policy directive: "script-src 'self' 'unsafe-inline'".
-      const resultJson = JSON.parse(JSON.stringify(result));
-      console.log(resultJson);
-      channel.emit(EVENTS.RESULT, resultJson, storyId);
+      channel.emit(EVENTS.RESULT, result, storyId);
     } catch (error) {
       channel.emit(EVENTS.ERROR, error);
     }

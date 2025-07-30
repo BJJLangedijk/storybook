@@ -4,8 +4,8 @@ import { Badge } from 'storybook/internal/components';
 
 import { addons, types, useAddonState, useStorybookApi } from 'storybook/manager-api';
 
-import { WebPerformancePanel } from './components/WebPerformancePanel';
 import { WebPerformanceContextProvider } from './components/WebPerformanceContext';
+import { WebPerformancePanel } from './components/WebPerformancePanel';
 import { ADDON_ID, PANEL_ID, PARAM_KEY } from './constants';
 import type { PerformanceResults } from './types';
 
@@ -17,8 +17,11 @@ const Title = () => {
   const count = improvementsNb;
 
   const suffix =
-  results?.length === 0 ? null : (
-      <Badge compact status={selectedPanel === PANEL_ID ? 'active' : improvementsNb ? 'warning' : 'positive'}>
+    results?.length === 0 ? null : (
+      <Badge
+        compact
+        status={selectedPanel === PANEL_ID ? 'active' : improvementsNb ? 'warning' : 'positive'}
+      >
         {count}
       </Badge>
     );
@@ -43,7 +46,9 @@ addons.register(ADDON_ID, (api) => {
     title: Title,
     type: types.PANEL,
     render: ({ active = true }) => (
-      <WebPerformanceContextProvider>{active ? <WebPerformancePanel /> : null}</WebPerformanceContextProvider>
+      <WebPerformanceContextProvider>
+        {active ? <WebPerformancePanel /> : null}
+      </WebPerformanceContextProvider>
     ),
     paramKey: PARAM_KEY,
   });

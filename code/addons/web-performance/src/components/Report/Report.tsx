@@ -12,7 +12,7 @@ import { Details } from './Details';
 
 const impactStatus: Record<NonNullable<Rating>, ComponentProps<typeof Badge>['status']> = {
   good: 'positive',
-  "needs improvement": 'warning',
+  'needs improvement': 'warning',
   poor: 'negative',
 };
 
@@ -92,7 +92,7 @@ export const Report: FC<ReportProps> = ({
   <>
     {items && items.length ? (
       items.map((item) => {
-        const name = item.type
+        const name = item.type;
         const detailsId = `details:${name}`;
         const selection = selectedItems.get(name);
         return (
@@ -101,9 +101,7 @@ export const Report: FC<ReportProps> = ({
               <Title>
                 <Description>{item.type}</Description>
               </Title>
-              <Badge status={impactStatus[item.rating]}>
-                {item.value}
-              </Badge>
+              <Badge status={impactStatus[item.rating]}>{item.value}</Badge>
               <IconButton
                 onClick={(event) => toggleOpen(event, item)}
                 aria-label={`${selection ? 'Collapse' : 'Expand'} details for ${name}`}
