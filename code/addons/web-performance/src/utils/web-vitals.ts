@@ -1,5 +1,30 @@
 import { type Metric } from '../types';
 
+type LargestContentfulPaint = PerformanceEntry & {
+  duration: number;
+  element?: HTMLElement;
+  entryType: 'largest-contentful-paint';
+  id: string;
+  loadTime: number;
+  name: string;
+  renderTime: number;
+  size: number;
+  startTime: number;
+  url: string;
+};
+
+type LayoutShift = PerformanceEntry & {
+  hadRecentInput: boolean;
+  sources: [
+    {
+      currentRect: unknown;
+      node: HTMLElement;
+      previousRect: unknown;
+    },
+  ];
+  value: number;
+};
+
 export type PerformanceData = {
   CLS: number;
   LCP: number;
@@ -14,14 +39,12 @@ export function addRating({ CLS, LCP, INP }: PerformanceData): Metric[] {
       description: 'Cumulative Layout Shift',
       rating: CLS < 0.1 ? 'good' : CLS < 0.25 ? 'needs improvement' : 'poor',
       value: CLS,
-      nodes: [],
     },
     {
       type: 'LCP',
       description: 'Largest Contentful Paint',
       rating: LCP < 2500 ? 'good' : LCP < 4000 ? 'needs improvement' : 'poor',
       value: `${LCP}ms`,
-      nodes: [],
     },
     // TODO: Enable LCP&FCP metric once the double LCP issue is resolved
     // {
@@ -35,7 +58,6 @@ export function addRating({ CLS, LCP, INP }: PerformanceData): Metric[] {
       description: 'Interaction to Next Paint',
       rating: INP < 200 ? 'good' : INP < 500 ? 'needs improvement' : 'poor',
       value: `${INP}ms`,
-      nodes: [],
     },
   ];
 }
@@ -45,7 +67,7 @@ export async function collectVitals() {
   // Collect LCP (Largest Contentful Paint) metric
   const LCP: number = await new Promise((resolve) => {
     new PerformanceObserver((list) => {
-      const entries = list.getEntries();
+      const entries = list.getEntries() as LargestContentfulPaint[];
       const lcp = entries.at(-1);
       return resolve(Number(Number(lcp?.startTime).toFixed(2)));
     }).observe({
@@ -57,13 +79,14 @@ export async function collectVitals() {
   // Collect CLS (Cumulative Layout Shift) metric
   const CLS: number = await new Promise((resolve) => {
     new PerformanceObserver((list) => {
-      let total = 0;
-      for (const entry of list.getEntries()) {
-        if (!(entry as any).hadRecentInput) {
-          total += (entry as any).value;
+      const worstShift = (list.getEntries() as LayoutShift[]).reduce((worst, current) => {
+        if (!current.hadRecentInput && current.value > worst.value) {
+          return current;
         }
-      }
-      return resolve(+total.toPrecision(2));
+        return worst;
+      });
+
+      return resolve(+worstShift.value.toPrecision(2));
     }).observe({ type: 'layout-shift', buffered: true });
   });
 

@@ -46,9 +46,6 @@ const meta = preview.meta({
   args: {
     items: [],
     empty: 'No issues found',
-    handleSelectionChange: fn().mockName('handleSelectionChange'),
-    selectedItems: new Map(),
-    toggleOpen: fn().mockName('toggleOpen'),
   },
 });
 
@@ -57,20 +54,17 @@ export const Empty = meta.story({});
 export const Violations = meta.story({
   args: {
     items: results,
-    selectedItems: new Map([[results[0].type, `${results[0].type}.3`]]),
   },
 });
 
 export const Incomplete = meta.story({
   args: {
     items: results,
-    selectedItems: new Map([[results[1].type, `${results[1].type}.2`]]),
   },
 });
 
 export const Passes = meta.story({
   args: {
     items: results,
-    selectedItems: new Map([[results[2].type, `${results[2].type}.1`]]),
   },
 });

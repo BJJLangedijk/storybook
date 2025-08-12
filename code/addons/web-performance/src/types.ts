@@ -36,14 +36,13 @@ export const Rating = {
 
 export type Rating = 'good' | 'needs improvement' | 'poor';
 
-export type PerformanceResults = Metric[];
+export type PerformanceResults = Metric[] | undefined;
 
 export type Metric = {
   type: string;
   description?: string;
   value: number | string;
   rating: Rating;
-  nodes: [];
 };
 
 export interface WebPerformanceTypes {

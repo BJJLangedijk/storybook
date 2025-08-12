@@ -46,17 +46,8 @@ const Centered = styled.span(({ theme }) => ({
 }));
 
 export const WebPerformancePanel: React.FC = () => {
-  const {
-    parameters,
-    results,
-    status,
-    handleManual,
-    error,
-    discrepancy,
-    handleSelectionChange,
-    selectedItems,
-    toggleOpen,
-  } = useWebPerformanceContext();
+  const { parameters, results, status, handleManual, error, discrepancy } =
+    useWebPerformanceContext();
 
   if (parameters.disable || parameters.test === 'off') {
     return (
@@ -81,13 +72,7 @@ export const WebPerformancePanel: React.FC = () => {
     <>
       {discrepancy && <TestDiscrepancyMessage discrepancy={discrepancy} />}
       {status === 'ready' || status === 'ran' ? (
-        <Report
-          items={results}
-          empty="No web performance analysis found."
-          handleSelectionChange={handleSelectionChange}
-          selectedItems={selectedItems}
-          toggleOpen={toggleOpen}
-        />
+        <Report items={results} empty="No web performance analysis found." />
       ) : (
         <Centered style={{ marginTop: discrepancy ? '1em' : 0 }}>
           {status === 'initial' && (
