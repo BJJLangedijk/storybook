@@ -14,13 +14,13 @@ const Title = () => {
   const selectedPanel = api.getSelectedPanel();
   const [results] = useAddonState<PerformanceResults>(ADDON_ID);
   const improvementsNb = results?.filter((item) => item.rating !== 'good').length || 0;
-  const count = improvementsNb;
+  const count = results?.length;
 
   const suffix =
     results?.length === 0 ? null : (
       <Badge
         compact
-        status={selectedPanel === PANEL_ID ? 'active' : improvementsNb ? 'warning' : 'positive'}
+        status={selectedPanel === PANEL_ID ? 'active' : improvementsNb ? 'warning' : 'neutral'}
       >
         {count}
       </Badge>
